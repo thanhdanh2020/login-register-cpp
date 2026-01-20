@@ -22,7 +22,7 @@ void displayWelcomeMenu() {
 void displayLoginMenu() {
     cout << "--------------------------" << endl;
     cout << "Login Menu" << endl;
-    cout << "1. Reset Password" << endl;
+    cout << "1. Change Password" << endl;
     cout << "Other. Logout" << endl;
     cout << "--------------------------" << endl;
     cout << "Enter your choice: ";

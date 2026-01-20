@@ -28,13 +28,16 @@ public:
     User() {}
 
     string getUsername() const;
+
     string getHashPassword() const;
 
     friend istream& operator>>(istream& in, User& user);
 
-    bool checkUserExists();
+    bool isUserExists();
 
-    void resetPassword();
+    bool isPasswordStrong();
+
+    void changePassword();
 
     void loginPage();
 

@@ -47,21 +47,47 @@
         return in;
     }
 
-    bool User::checkUserExists() 
+    bool User::isUserExists() 
     {
         ifstream file(USER_DATA_FOLDER + this->username + ".txt");
         return file.good();
     }
 
-    void User::resetPassword()
+    bool User::isPasswordStrong() 
     {
+        if (PASSWORD_VALIDATION_ENABLED)
+        {
+            return this->isPasswordHasNumber() &&
+                   this->isPasswordHasSpecialChar() &&
+                   this->isPasswordTooShort();
+        }
+        return true;
+    }
+
+    void User::changePassword()
+    {
+        // User enter new password
         cout << "Enter new password: ";
         string newPassword = getHiddenPassword();
-        if (this->password == newPassword) {
+        string oldPassword = this->password;
+
+        // Conditions before 
+        // If new password same as old password, show error and return to login page
+        if (oldPassword == newPassword) {
             cout << MSG_ERROR_PASSWORD_SAME_AS_OLD << endl;
             this->loginPage();
         }
+
+        // Set new password temporarily to check strength
         this->password = newPassword;
+        // If new password not strong, show error and return to login page
+        if (!this->isPasswordStrong()) {
+            cout << MSG_ERROR_PASSWORD_NOT_STRONG << endl;
+            this->password = oldPassword; // revert to old password
+            this->loginPage();
+        }
+
+        // Update password in user data file
         ofstream userFile;
         userFile.open(USER_DATA_FOLDER + this->username + ".txt");
         userFile << this->username << endl << this->getHashPassword() << endl;
@@ -76,8 +102,8 @@
         int choice;
         cin >> choice;
         if (choice == 1) {
-            // Choice 1: Reset Password
-            this->resetPassword();
+            // Choice 1: Change Password
+            this->changePassword();
         }
         else {
             // Choice Other: Logout
@@ -94,9 +120,12 @@
         getline(read, user);
         getline(read, hashedPass);
 
+        // Validate credentials
+        // if correct username & password, process to login page
         if (user == this->username && hashedPass == this->getHashPassword()) {
             this->loginPage();
         }
+        // else clear entered username & password, then show error message
         else {
             this->clearCredentials();
             cout << MSG_ERROR_LOGIN_FAILED << endl;
@@ -106,30 +135,19 @@
     void User::registerUser()
     {
         cin >> *this;
-        if (this->checkUserExists()) {
+        // Conditions before register: 
+        // Check if username exists, if true then show error message
+        if (this->isUserExists()) {
             cout << MSG_ERROR_USERNAME_EXISTS << endl;
             return;
         }
-
-        if (PASSWORD_VALIDATION_ENABLED) {
-            if (!isUsernameTooLong()) {
-                cout << MSG_ERROR_USERNAME_TOO_LONG << endl;
-                return;
-            }
-            if (!isPasswordTooShort()) {
-                cout << MSG_ERROR_PASSWORD_TOO_SHORT << endl;
-                return;
-            }
-            if (!isPasswordHasNumber()) {
-                cout << MSG_ERROR_PASSWORD_REQUIRE_NUMBER << endl;
-                return;
-            }
-            if (!isPasswordHasSpecialChar()) {
-                cout << MSG_ERROR_PASSWORD_REQUIRE_SPECIAL << endl;
-                return;
-            }
+        // Check if password strong, if false then show error message
+        else if (!this->isPasswordStrong()) {
+            cout << MSG_ERROR_PASSWORD_NOT_STRONG << endl;
+            return;
         }
 
+        // Pass all conditions, create user data file
         ofstream userFile;
         userFile.open(USER_DATA_FOLDER + this->username + ".txt");
         userFile << this->username << endl << this->getHashPassword() << endl;

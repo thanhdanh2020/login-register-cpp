@@ -31,6 +31,7 @@ const std::string MSG_ERROR_USERNAME_TOO_LONG = "Error: Username exceeds maximum
 const std::string MSG_ERROR_PASSWORD_TOO_SHORT = "Error: Password must be at least " + std::to_string(PASSWORD_MIN_LENGTH) + " characters long.";
 const std::string MSG_ERROR_PASSWORD_REQUIRE_SPECIAL = "Error: Password must contain at least one special character";
 const std::string MSG_ERROR_PASSWORD_REQUIRE_NUMBER = "Error: Password must contain at least one numeric digit (0-9).";
+const std::string MSG_ERROR_PASSWORD_NOT_STRONG = "Error: Password must contain at least one number, one special character, and be at least " + std::to_string(PASSWORD_MIN_LENGTH) + " characters long."; 
 const std::string MSG_ERROR_PASSWORD_SAME_AS_OLD = "Error: New password cannot be the same as the old password.";
 const std::string MSG_ERROR_USERNAME_EXISTS = "Error: Username already exists. Please choose a different username.";
 const std::string MSG_ERROR_LOGIN_FAILED = "Login failed. Incorrect username or password.";
