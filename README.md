@@ -9,11 +9,7 @@ A C++ console-based authentication system built for Windows using MinGW/g++. Thi
 ## 📁 Project Structure
 
 ```
-final_project/
-├── .github/
-│   └── copilot-instructions.md    # AI coding assistant instructions
-├── .vscode/
-│   └── tasks.json                 # VS Code build configuration
+login-register-system/
 ├── user/
 │   └── data/
 │       └── {username}.txt         # Per-user credential files
@@ -23,8 +19,7 @@ final_project/
 ├── user.hpp                       # User class declaration
 ├── user.cpp                       # User class implementation
 ├── main.cpp                       # Application entry point
-├── main.exe                       # Compiled executable
-└── README.md                      # This file
+└── README.md                      # Project info
 ```
 
 ### File Descriptions
@@ -59,7 +54,6 @@ final_project/
 ┌─────────────────────┐
 │  Validate Username: │
 │  • User exists?     │ ─► Error: Username already exists
-│  • Length ≤ 20?     │ ─► Error: Username too long
 └────────┬────────────┘
          ▼
 ┌─────────────────────┐
@@ -74,10 +68,11 @@ final_project/
 │ user/data/      │
 │ {username}.txt  │
 └────────┬────────┘
+         | Success
          ▼
 ┌─────────────────┐
-│    Success!     │
-│ Return to Menu  │
+│   Return to     │
+│  Welcome Menu   │
 └─────────────────┘
 ```
 
@@ -117,34 +112,44 @@ final_project/
 └─────────────────┘
 ```
 
-### 3. Reset Password Flow
+### 3. Change Password Flow
 
 ```
 ┌─────────────────┐
 │   Login Menu    │
-│ [1] Reset Pass  │
+│ [1] Change Pass │
 └────────┬────────┘
          ▼
 ┌─────────────────┐
 │ Enter New Pass  │
 │ (masked input)  │
 └────────┬────────┘
-         │
-    ┌────┴────────┐
-    │ Same as old?│
-    └────┬────────┘
-     Yes │  No
-    ┌────┴────────────┐
-    ▼                 ▼
-┌─────────────┐  ┌─────────────┐
-│   Error!    │  │ Update file │
-│ Return to   │  │ Hash & Save │
-│ Login Menu  │  └──────┬──────┘
-└─────────────┘         ▼
-                 ┌─────────────┐
-                 │  Success!   │
-                 │Clear session│
-                 └─────────────┘
+         ▼
+┌─────────────────┐
+│ Same as old?    │──── Yes ────┐
+└────────┬────────┘             │
+         │ No                   │
+         ▼                      │
+┌─────────────────┐             │
+│Validate Password│             │
+│  • Length ≥ 6?  │             │
+│  • Has number?  │             │
+│  • Has special? │             │
+└────────┬────────┘             │
+         │                      │
+    Valid│  Invalid             │
+    ┌────┴──────────────────────┤
+    ▼                           ▼
+┌─────────────┐          ┌─────────────┐
+│ Update file │          │   Error!    │
+│ Hash & Save │          │ Return to   │
+└──────┬──────┘          │ Login Menu  │
+       | Success         └─────────────┘
+       ▼                 
+┌─────────────────┐
+│   Return to     │
+│  Welcome Menu   │
+└─────────────────┘
 ```
 
 ---
@@ -195,7 +200,7 @@ This console application demonstrates concepts that mirror real-world authentica
 |--------------|--------------------------------|
 | `user.login()` | `POST /api/auth/login` |
 | `user.registerUser()` | `POST /api/auth/register` |
-| `user.resetPassword()` | `PUT /api/auth/password` |
+| `user.changePassword()` | `PUT /api/auth/password` |
 | `checkUserExists()` | `GET /api/users/{username}/exists` |
 | File-based storage | Database (MySQL, PostgreSQL, MongoDB) |
 | `std::hash` | bcrypt, Argon2, PBKDF2 |
