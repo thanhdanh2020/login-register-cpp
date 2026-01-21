@@ -76,15 +76,17 @@
         if (oldPassword == newPassword) {
             cout << MSG_ERROR_PASSWORD_SAME_AS_OLD << endl;
             this->loginPage();
+            return;
         }
 
         // Set new password temporarily to check strength
         this->password = newPassword;
         // If new password not strong, show error and return to login page
         if (!this->isPasswordStrong()) {
+            this->password = oldPassword; // Revert to old password
             cout << MSG_ERROR_PASSWORD_NOT_STRONG << endl;
-            this->password = oldPassword; // revert to old password
             this->loginPage();
+            return;
         }
 
         // Update password in user data file
